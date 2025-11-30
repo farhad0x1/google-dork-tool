@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Google Dorks Masterlist — Neon Theme</title>
+<style>
+  :root{
+    --bg:#0f0c17;
+    --card:#1a1527;
+    --accent:#ff00ff;
+    --muted:#d4bfff;
+    --glass: rgba(255,255,255,0.02);
+    --btn:#ff1493;
+    --btn-hover:#ff69b4;
+  }
+  body{
+    margin:0;
+    font-family:Inter,Segoe UI,Roboto,system-ui,Arial;
+    background:linear-gradient(180deg,#0b0010 0%, #1a001a 100%);
+    color:#f0e6ff;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:1100px;
+    margin:28px auto;
+    padding:22px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.04));
+    border-radius:12px;
+    box-shadow:0 6px 30px rgba(255,0,255,0.2,0.6);
+    border:1px solid rgba(255,0,255,0.1);
+  }
+  header{display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+  .logo{
+    width:56px;height:56px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent), #ff69b4);
+    display:grid;place-items:center;font-weight:700;color:#04263b;
+    box-shadow:0 4px 18px rgba(255,0,255,0.6);
+  }
+  h1{margin:0;font-size:20px;color:#ffb3ff;}
+  p.lead{margin:6px 0 0;color:var(--muted);font-size:13px}
+  .controls{
+    display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap;
+  }
+  input[type="text"]{
+    padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+    background:var(--glass);color:inherit;min-width:260px;font-size:14px;
+    outline:none;
+  }
+  button.primary{
+    background:linear-gradient(90deg,var(--btn),var(--btn-hover));
+    color:#fff;border:0;padding:11px 14px;border-radius:10px;
+    font-weight:700;cursor:pointer;
+    transition:0.3s all;
+  }
+  button.primary:hover{
+    background:linear-gradient(90deg,var(--btn-hover),var(--btn));
+    box-shadow:0 0 15px var(--btn-hover);
+  }
+  button.ghost{
+    background:transparent;border:1px solid rgba(255,0,255,0.4);color:var(--muted);
+    padding:10px 12px;border-radius:10px;cursor:pointer;
+    transition:0.2s all;
+  }
+  button.ghost:hover{
+    color:#ff69b4;
+    border-color:#ff69b4;
+    box-shadow:0 0 10px #ff69b4;
+  }
+  .grid{
+    margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;
+  }
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+    border-radius:10px;padding:12px;border:1px solid rgba(255,0,255,0.05);
+    display:flex;flex-direction:column;gap:8px;
+    transition:0.3s all;
+  }
+  .card:hover{
+    box-shadow:0 0 15px #ff69b4;
+    transform: translateY(-2px);
+  }
+  .card .title{font-size:13px;font-weight:700;color:#ffb3ff}
+  .card .desc{font-size:12px;color:var(--muted);min-height:36px}
+  .card .btnrow{margin-top:auto;display:flex;gap:8px;justify-content:flex-end;}
+  .card a.btn{
+    text-decoration:none;padding:8px 10px;border-radius:8px;background:var(--btn);color:#fff;font-weight:700;
+    box-shadow:0 6px 18px rgba(255,0,255,0.3);
+    transition:0.3s all;
+  }
+  .card a.btn:hover{
+    background:var(--btn-hover);
+    box-shadow:0 0 12px #ff69b4;
+  }
+  footer{margin-top:18px;padding-top:12px;border-top:1px dashed rgba(255,0,255,0.2);color:var(--muted);font-size:13px}
+  .small{font-size:12px;color:var(--muted)}
+  @media (max-width:600px){
+    .controls{flex-direction:column;align-items:stretch}
+    input[type="text"]{width:100%}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">GD</div>
+      <div>
+        <h1>Google Dorks Masterlist — Neon Pink</h1>
+        <p class="lead">Replace the target in the box and click any button to open a Google search in a new tab. Use only on authorized targets.</p>
+      </div>
+    </header>
+
+    <div class="controls">
+      <input id="targetInput" type="text" placeholder="Enter target (e.g. example.com or *.example.com)" value="{TARGET}">
+      <button class="primary" id="applyBtn">Apply Target</button>
+      <button class="ghost" id="resetBtn">Reset to {TARGET}</button>
+      <div style="margin-left:auto" class="small">Opens in new tab · <strong>rel="noopener noreferrer"</strong></div>
+    </div>
+
+    <div class="grid" id="buttonsGrid"></div>
+
+    <footer>
+      <div>⚠️ <strong>Disclaimer:</strong> Only use these queries for legal, authorized security testing (bug bounty programs where you have permission). Avoid credential harvesting or illegal activity.</div>
+    </footer>
+  </div>
+
+<script>
+const dorks = [
+  { title: "1. One-level Subdomains", template: "site:*.{TARGET}" },
+  { title: "2. Multi-level Subdomains", template: "site:*.*.{TARGET}" },
+  { title: "3. Config & Sensitive System Files", template: "site:{TARGET} (filetype:xml OR filetype:conf OR filetype:cnf OR filetype:reg OR filetype:inf OR filetype:rdp OR filetype:cfg OR filetype:ora OR filetype:ini OR filetype:action OR filetype:struts OR filetype:do OR filetype:c OR filetype:py OR filetype:pl)" },
+  { title: "4. Database, Backup & Log Files", template: "site:{TARGET} (filetype:sql OR filetype:dbf OR filetype:mdb OR filetype:bkf OR filetype:bkp OR filetype:bak OR filetype:old OR filetype:backup OR filetype:log OR filetype:env OR filetype:zip OR filetype:xls)" },
+  { title: "5. Documents & Office Files", template: "site:{TARGET} (filetype:doc OR filetype:docx OR filetype:odt OR filetype:pdf OR filetype:rtf OR filetype:sxw OR filetype:psw OR filetype:ppt OR filetype:pptx OR filetype:pps OR filetype:csv OR filetype:txt)" },
+  { title: "6. Google Drive Discovery", template: "site:{TARGET} (intext:\"drive.google.com\" OR intext:\"drive.google.com/drive/folders\" OR intext:\"drive.google.com/file\" OR intext:\"docs.google.com/document\" OR intext:\"docs.google.com/spreadsheets\" OR intext:\"docs.google.com/presentation\")" },
+  { title: "7. SQL Error Disclosure", template: "site:{TARGET} (intext:\"sql syntax near\" OR intext:\"syntax error has occurred\" OR intext:\"incorrect syntax near\" OR intext:\"unexpected end of SQL command\" OR intext:\"Warning: mysql_connect()\" OR intext:\"Warning: mysql_query()\" OR intext:\"Warning: pg_connect()\" OR intext:\"Unclosed quotation mark after the character string\")" },
+  { title: "8. WordPress Path & Directory Enumeration", template: "site:{TARGET} (inurl:wp- OR inurl:wp-content OR inurl:plugins OR inurl:uploads OR inurl:themes OR inurl:download OR inurl:login OR inurl:wp-includes OR inurl:wp-admin OR inurl:\"/wp-json/\")" },
+  { title: "9. Sensitive File & Debug Endpoint Exposure", template: "site:{TARGET} (inurl:\"/phpinfo.php\" OR inurl:\".htaccess\" OR inurl:\"/.git\") -site:github.com" },
+  { title: "10. Sensitive File & Backdoor Enumeration", template: "site:{TARGET} (inurl:readme OR inurl:license OR inurl:install OR inurl:setup OR inurl:config OR inurl:shell OR inurl:backdoor OR inurl:wso OR inurl:cmd OR intext:shadow OR intext:passwd OR intext:\"boot.ini\" OR inurl:backdoor)" },
+  { title: "11. Open redirect", template: "site:{TARGET} (inurl:redir= OR inurl:redirect= OR inurl:return= OR inurl:url= OR inurl:next= OR inurl:to= OR inurl:dest= OR inurl:destination= OR inurl:continue= OR inurl:out= OR inurl:forward= OR inurl:jump= OR inurl:src=http OR inurl:r=http OR inurl:u= OR inurl:redirect_to=)" },
+  { title: "12. Pastebin", template: "site:pastebin.com \"{TARGET}\"" },
+  { title: "13. Publicly Accessible phpinfo() Pages", template: "site:{TARGET} ext:php intitle:\"phpinfo\" \"published by the PHP Group\" \"PHP Parse error\" \"PHP Warning\"" },
+  { title: "14. Directory Listing Exposure", template: "site:{TARGET} intitle:\"index of\"" },
+  { title: "15. Public Jenkins Dashboard Exposure", template: "intitle:\"Dashboard [Jenkins]\" site:{TARGET}" },
+  { title: "16. Login Page & Credential Keyword Enumeration", template: "site:{TARGET} (intext:\"login\" OR intitle:\"login\" OR inurl:\"login\" OR intext:\"username\" OR intitle:\"username\" OR inurl:\"username\" OR intext:\"password\" OR intitle:\"password\" OR inurl:\"password\" OR intitle:\"admin login\")" },
+  { title: "17. API Documentation & Endpoint Enumeration", template: "site:{TARGET} (inurl:apidocs OR inurl:api-docs OR inurl:swagger OR inurl:api-explorer OR inurl:api OR inurl:/v1 OR inurl:/v2 OR inurl:/v3)" },
+  { title: "18. Public Code & Paste Platforms Leak Enumeration", template: "\"{TARGET}\" (site:ideone.com OR site:codebeautify.org OR site:codeshare.io OR site:codepen.io OR site:repl.it OR site:justpaste.it OR site:pastebin.com OR site:jsfiddle.net OR site:trello.com OR site:*.atlassian.net OR site:bitbucket.org)" },
+  { title: "19. Confidential Keyword Exposure", template: "site:{TARGET} \"confidential\"" },
+  { title: "20. Public GitHub Mentions", template: "site:github.com \"{TARGET}\" (\"secret\" OR \"password\")" },
+  { title: "21. Sensitive Keyword Exposure Enumeration", template: "site:{TARGET} (\"password\" OR \"admin\" OR \"keys\" OR \"tokens\" OR \"token\" OR \"API_KEY\" OR \"username\" OR \"email\" \"api\" \"keys\")" },
+  { title: "22. Environment Enumeration", template: "site:{TARGET} (inurl:staging OR inurl:test OR inurl:dev OR inurl:env OR inurl:sandbox OR inurl:debug OR inurl:temp OR inurl:internal OR inurl:demo)" },
+  { title: "23. Sensitive credentials (XLS)", template: "site:{TARGET} filetype:xls (intext:\"login\" OR intext:\"user\" OR intext:\"access\" OR intext:\"sql\" OR intext:\"token\")" },
+  { title: "24. Credential-harvesting (Indicators)", template: "site:{TARGET} (intext:\"user\" OR intext:\"login\" OR intext:\"account\" OR intext:\"password\" OR intext:\"pass\" OR intext:\"pwd\") (filetype:xls OR filetype:xlsx OR filetype:txt)" },
+  { title: "25. Cached Version Lookup", template: "cache:{TARGET}" },
+  { title: "26. XLSX File Keyword Enumeration", template: "site:{TARGET} filetype:xlsx (intext:\"email\" \"phone number\")" },
+  { title: "27. Apache Server Status Enumeration", template: "site:{TARGET} (intitle:\"Apache\" OR intitle:\"Apache Status\" OR intitle:\"Apache Server Status\")" },
+  { title: "28. Cisco / Juniper / Huawei Config (safe form)", template: "site:{TARGET} filetype:conf (intext:\"cisco\" OR intext:\"juniper\" OR intext:\"huawei\")" },
+  { title: "29. Generic v1 API", template: "site:{TARGET} inurl:/api/v1/" },
+  { title: "30. Exposed .env, .gitignore, Docker, CI/CD files", template: "site:{TARGET} (filetype:env OR filetype:env.example OR filetype:gitignore OR filetype:Dockerfile OR filetype:docker-compose.yml OR filetype:yaml OR filetype:yml)" },
+  { title: "31. Exposed S3 Buckets / Cloud Storage", template: "site:{TARGET} (\"aws s3\" OR \"amazonaws.com\" OR \"s3.amazonaws.com\")" },
+  { title: "32. CVE Signature Search (Version Disclosure)", template: "site:{TARGET} (\"Apache/2\" OR \"nginx/\" OR \"IIS/\") intitle:\"index of\"" },
+  { title: "33. GraphQL Playgrounds / Explorers", template: "site:{TARGET} (inurl:/graphql OR intext:\"GraphiQL\" OR intitle:\"Apollo Sandbox\")" },
+  { title: "34. Exposed Monitoring / Admin Panels", template: "site:{TARGET} (intitle:\"Kibana\" OR intitle:\"Prometheus\" OR intitle:\"Grafana\" OR inurl:\"/metrics\")" },
+  { title: "35. Public Node Modules / package.json", template: "site:{TARGET} inurl:package.json" },
+  { title: "36. Backup Source Code", template: "site:{TARGET} (filetype:zip OR filetype:gz OR filetype:tar OR filetype:7z) (\"backup\" OR \"source\")" },
+  { title: "37. Exposed Firebase / App Config", template: "site:{TARGET} (inurl:firebaseio.com OR intext:\"firebaseConfig\")" },
+  { title: "38. Internal IP Disclosure", template: "site:{TARGET} (\"172.16.\" OR \"192.168.\" OR \"10.0.\")" },
+  { title: "39. Exposed Messaging Queues / Cron / Scheduler UI", template: "site:{TARGET} (intitle:\"RabbitMQ Management\" OR intitle:\"ActiveMQ\" OR inurl:/admin OR intitle:\"Crontab\" OR intitle:\"Scheduler\" OR inurl:\"/cron\")" },
+  { title: "40. E-mail / Support Ticket Systems", template: "site:{TARGET} (inurl:\"/ticket\" OR inurl:\"/support\" OR intitle:\"Helpdesk\")" },
+  { title: "41. Directory Traversal Indicators", template: "site:{TARGET} (intext:\"../\" OR intext:\"..\\\\..\\\\\") \"Warning\"" },
+  { title: "42. Exposed Adminer / phpMyAdmin / PgAdmin", template: "site:{TARGET} (intitle:\"Adminer\" OR intitle:\"phpMyAdmin\" OR intitle:\"pgAdmin\")" },
+  { title: "43. Exposed Adminer / phpMyAdmin / PgAdmin / administrator / account / server / admin / admin1 /", template: "site:{TARGET} (intitle:\"Adminer\" OR intitle:\"phpMyAdmin\" OR intitle:\"pgAdmin\" OR intitle:\"administrator\" OR intitle:\"account\" OR intitle:\"server\" OR intitle:\"admin\" OR intitle:\"login\")" }
+];
+
+const grid = document.getElementById('buttonsGrid');
+const input = document.getElementById('targetInput');
+const applyBtn = document.getElementById('applyBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+function buildCard(dork){
+  const card = document.createElement('div');
+  card.className = 'card';
+  const t = document.createElement('div');
+  t.className = 'title';
+  t.textContent = dork.title;
+  const desc = document.createElement('div');
+  desc.className = 'desc';
+  desc.textContent = dork.template.replace(/{TARGET}/g, '{TARGET}');
+  const btnrow = document.createElement('div');
+  btnrow.className = 'btnrow';
+  const a = document.createElement('a');
+  a.className = 'btn';
+  a.href = '#';
+  a.textContent = 'Open Search';
+  a.addEventListener('click', function(ev){
+    ev.preventDefault();
+    openDorkSearch(dork.template);
+  });
+  const copy = document.createElement('button');
+  copy.className = 'ghost';
+  copy.style.border='1px solid rgba(255,0,255,0.4)';
+  copy.textContent = 'Copy Dork';
+  copy.addEventListener('click', function(){
+    copyToClipboard(dork.template.replace(/{TARGET}/g, input.value || '{TARGET}'));
+    copy.textContent = 'Copied!';
+    setTimeout(()=> copy.textContent = 'Copy Dork',1200);
+  });
+  btnrow.appendChild(copy);
+  btnrow.appendChild(a);
+  card.appendChild(t);
+  card.appendChild(desc);
+  card.appendChild(btnrow);
+  return card;
+}
+
+function openDorkSearch(template){
+  const target = input.value.trim();
+  const filled = template.replace(/{TARGET}/g, target || '{TARGET}');
+  const q = encodeURIComponent(filled);
+  const url = 'https://www.google.com/search?q=' + q;
+  window.open(url, '_blank', 'noopener');
+}
+
+function copyToClipboard(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).catch(()=> fallbackCopy(text));
+  } else fallbackCopy(text);
+}
+
+function fallbackCopy(text){
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta);
+  ta.select(); try{document.execCommand('copy');}catch(e){}
+  ta.remove();
+}
+
+function renderAll(){
+  grid.innerHTML = '';
+  dorks.forEach(d=>{
+    grid.appendChild(buildCard(d));
+  });
+}
+
+applyBtn.addEventListener('click', ()=>{
+  alert('Target set to: ' + (input.value || '{TARGET}') + '\nNow click any "Open Search" button to run the query.');
+});
+
+resetBtn.addEventListener('click', ()=>{
+  input.value = '{TARGET}';
+});
+
+renderAll();
+</script>
+</body>
+</html>
